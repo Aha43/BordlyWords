@@ -10,6 +10,7 @@ namespace BordlyWords.DefaultInfrastructure.Api
 
         public Task<bool> IsWordAsync(ICheckWordParam p, CancellationToken cancellationToken = default) => Task.FromResult(GetWordsOfCulture(p.Culture).IsWord(p.Word));
 
+
         public Task<string?> GetWordAsync(IGetWordParam p, CancellationToken cancellationToken = default)
         {
             var words = GetWordsOfCulture(p.Culture);

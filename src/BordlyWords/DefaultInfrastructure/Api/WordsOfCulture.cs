@@ -11,6 +11,8 @@ namespace BordlyWords.DefaultInfrastructure.Api
 
         private readonly int[] _lengths;
 
+        private string[]? _checkWords;
+
         public WordsOfCulture(ILoadWordsParam p) 
         {
             var added = new HashSet<string>();
@@ -40,11 +42,19 @@ namespace BordlyWords.DefaultInfrastructure.Api
             }
 
             _lengths = lenghts.ToArray();
+
+            _checkWords = p.CheckWords?.Select(w => w.ToLower()).ToArray();
+            if (_checkWords != null) Array.Sort(_checkWords);
         }
 
         public bool IsWord(string word) 
         {
             var normalWord = word.ToLower();
+
+            if (_checkWords != null)
+            {
+                return Array.BinarySearch(_checkWords, normalWord) > -1;
+            }
             if (_words.TryGetValue(normalWord.Length, out var words)) return Array.BinarySearch(words, normalWord) > -1;
             return false;
         }

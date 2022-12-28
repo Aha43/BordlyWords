@@ -13,10 +13,14 @@ namespace BordlyWords.Services
         {
             return services.AddBordlyWordsServices(opt => 
             {
-                opt.AddSource(new WordSource
+                opt.AddSource(new WordDictionary
                 {
-                    SourceLocation = "./Data/nsf2022.txt"
-                });
+                    Name = "NSF2022",
+                    WordSource = new WordSource
+                    { 
+                        SourceLocation = "./Data/nsf2022.txt"
+                    } 
+                }); 
             });
         }
 
@@ -27,9 +31,9 @@ namespace BordlyWords.Services
             var o = new BordlyWordsConfigOpt();
             opt?.Invoke(o);
 
-            foreach (var source in o._wordSources)
+            foreach (var dictionary in o._dictionaries)
             {
-                Task<ILoadWordsParam> task = ReadWords(source);
+                Task<ILoadWordsParam> task = CreateLoadWordsParamAsync(dictionary);
                 task.Wait();
                 api.LoadWordsAsync(task.Result).Wait();
             }
@@ -37,54 +41,76 @@ namespace BordlyWords.Services
             return services.AddSingleton<IBordlyWordsApi>(api);
         }
 
-        private static async Task<ILoadWordsParam> ReadWords(this WordSource wordSource, CancellationToken cancellationToken = default)
+        private static async Task<ILoadWordsParam> CreateLoadWordsParamAsync(this WordDictionary dictionary, CancellationToken cancellationToken = default)
+        {
+            var words = await dictionary.WordSource.ReadWordsAsync(cancellationToken).ConfigureAwait(false);
+            var checkWords = default(IEnumerable<string>);
+            if (dictionary.CheckWordSource != null)
+            {
+                checkWords = await dictionary.CheckWordSource.ReadWordsAsync(cancellationToken).ConfigureAwait(false);
+            }
+
+            return new LoadWordsParam
+            {
+                Culture = dictionary.Culture,
+                Words = words,
+                CheckWords = checkWords
+            };
+        }
+
+        public static async Task<IEnumerable<string>> ReadWordsAsync(this WordSource source, CancellationToken cancellationToken = default)
         {
             var text = string.Empty;
-            if (wordSource.IsFile) 
+            if (source.IsFile)
             {
-                text = File.ReadAllText(wordSource.SourceLocation);
+                text = File.ReadAllText(source.SourceLocation);
             }
             else
             {
-                var uri = new Uri(wordSource.SourceLocation);
+                var uri = new Uri(source.SourceLocation);
                 using var httpClient = new HttpClient();
                 var response = await httpClient.GetAsync(uri, cancellationToken).ConfigureAwait(false);
                 text = await response.EnsureSuccessStatusCode().Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             }
-            
+
             var list = new List<string>();
             var reader = new StringReader(text);
             while (true)
             {
                 var line = reader.ReadLine();
                 if (line == null) break;
-                var word = wordSource.ToWord(line);
+                var word = source.ToWord(line);
                 list.Add(word);
             }
 
-            return new LoadWordsParam
-            {
-                Culture = wordSource.Culture,
-                Words = list.AsEnumerable()
-            };
+            return list;
         }
+
     }
 
     public class BordlyWordsConfigOpt
     {
-        internal readonly List<WordSource> _wordSources = new();
-        public BordlyWordsConfigOpt AddSource(WordSource wordSource) 
+        internal readonly List<WordDictionary> _dictionaries = new();
+        public BordlyWordsConfigOpt AddSource(WordDictionary dictionary) 
         {
-            _wordSources.Add(wordSource);
+            _dictionaries.Add(dictionary);
             return this;
         }
+    }
+
+    public class WordDictionary
+    {
+        public CultureInfo Culture { get; init; } = new CultureInfo("nb-NO");
+        public required string Name { get; init; }
+        public string? Description { get; init; }
+        public required WordSource WordSource { get; init; }
+        public WordSource? CheckWordSource { get; init; }
     }
 
     public class WordSource
     {
         public required string SourceLocation { get; set; }
         public bool IsFile { get; set; } = true;
-        public CultureInfo Culture { get; set; } = new CultureInfo("nb-NO");
         public Func<string, string> ToWord { get; set; } = e => e.ToString();
     }
 }

@@ -14,6 +14,13 @@ namespace BordlyWords.DefaultInfrastructure.Domain
             init => _words = value.EnsureOnlyMayBeWords();
         }
 
+        private IEnumerable<string>? _checkWords = null;
+        public IEnumerable<string>? CheckWords 
+        { 
+            get => _checkWords; 
+            init => _checkWords = value?.EnsureOnlyMayBeWords();
+        }
+
     }
 
 }
