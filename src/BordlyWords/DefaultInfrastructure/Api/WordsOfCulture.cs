@@ -45,11 +45,7 @@ namespace BordlyWords.DefaultInfrastructure.Api
         public bool IsWord(string word) 
         {
             var normalWord = word.ToLower();
-            if (_words.TryGetValue(normalWord.Length, out var words))
-            {
-                return Array.BinarySearch(words, word) > -1;
-            }
-
+            if (_words.TryGetValue(normalWord.Length, out var words)) return Array.BinarySearch(words, normalWord) > -1;
             return false;
         }
 
