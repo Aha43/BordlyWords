@@ -5,7 +5,9 @@ namespace BordlyWords.DefaultInfrastructure.Domain
 {
     public class CheckWordParam : ICheckWordParam
     {
-        public CultureInfo Culture { get; set; } = new CultureInfo("nb-NO");
+        public CultureInfo Culture { get; init; } = new CultureInfo("nb-NO");
+
+        public required string Name { get; init; }
 
         private string _word = string.Empty;
         public required string Word 

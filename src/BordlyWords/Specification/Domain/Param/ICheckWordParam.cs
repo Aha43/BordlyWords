@@ -4,7 +4,8 @@ namespace BordlyWords.Specification.Domain.Param
 {
     public interface ICheckWordParam
     {
-        public CultureInfo Culture { get; }
-        public string Word { get; init; }
+        CultureInfo Culture { get; }
+        string Name { get; }
+        string Word { get; init; }
     }
 }

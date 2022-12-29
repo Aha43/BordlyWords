@@ -53,6 +53,7 @@ namespace BordlyWords.Services
             return new LoadWordsParam
             {
                 Culture = dictionary.Culture,
+                Name = dictionary.Name,
                 Words = words,
                 CheckWords = checkWords
             };
@@ -113,4 +114,5 @@ namespace BordlyWords.Services
         public bool IsFile { get; set; } = true;
         public Func<string, string> ToWord { get; set; } = e => e.ToString();
     }
+
 }

@@ -3,18 +3,27 @@ using System.Globalization;
 
 namespace BordlyWords.DefaultInfrastructure.Api
 {
-    internal sealed class WordsOfCulture
+    internal sealed class WordDictionary
     {
         public CultureInfo Culture { get; private set; } = new CultureInfo("nb-NO");
+
+        public string Name { get; private set; }
+
+        public string Key => $"{Name}_{Culture.Name}";
+
+        public string? Description { get; private set; }
 
         private readonly Dictionary<int, string[]> _words = new();
 
         private readonly int[] _lengths;
 
-        private string[]? _checkWords;
+        private readonly string[]? _checkWords;
 
-        public WordsOfCulture(ILoadWordsParam p) 
+        public WordDictionary(ILoadWordsParam p) 
         {
+            Name = p.Name; 
+            Description = p.Description;
+
             var added = new HashSet<string>();
 
             var lenghts = new HashSet<int>();
@@ -27,11 +36,14 @@ namespace BordlyWords.DefaultInfrastructure.Api
                 {
                     var length = word.Length;
 
-                    if (!tmp.ContainsKey(length)) tmp[length] = new();
-                    tmp[length].Add(normalWord);
+                    if (length >= p.MinWordLength && length <= p.MaxWordLength) 
+                    {
+                        if (!tmp.ContainsKey(length)) tmp[length] = new();
+                        tmp[length].Add(normalWord);
 
-                    added.Add(normalWord);
-                    lenghts.Add(length);
+                        added.Add(normalWord);
+                        lenghts.Add(length);
+                    }
                 }
             }
 

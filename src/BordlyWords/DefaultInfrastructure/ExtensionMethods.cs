@@ -1,4 +1,6 @@
-﻿namespace BordlyWords.DefaultInfrastructure
+﻿using BordlyWords.Specification.Domain.Param;
+
+namespace BordlyWords.DefaultInfrastructure
 {
     public static class ExtensionMethods
     {
@@ -28,6 +30,18 @@
         {
             foreach (var e in elements) action.Invoke(e);
         }
+
+        public static void EnsureLoadWordsParamParam(this ILoadWordsParam p)
+        {
+            if (p.MaxWordLength < p.MinWordLength)
+            {
+                throw new ArgumentException($"{nameof(p)}.{nameof(p.MaxWordLength)} < {nameof(p)}.{nameof(p.MinWordLength)} : {p.MaxWordLength} < {p.MinWordLength}");
+            }
+        }
+
+        public static string Key(this ICheckWordParam p) => $"{p.Name}_{p.Culture.Name}";
+
+        public static string Key(this IGetWordParam p) => $"{p.Name}_{p.Culture.Name}";
 
     }
 

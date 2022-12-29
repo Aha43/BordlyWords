@@ -7,6 +7,8 @@ namespace BordlyWords.DefaultInfrastructure.Domain
     {
         public CultureInfo Culture { get; init; } = new CultureInfo("nb-NO");
 
+        public required string Name { get; init; }
+
         private int? _length = null;
         public int? Length
         {

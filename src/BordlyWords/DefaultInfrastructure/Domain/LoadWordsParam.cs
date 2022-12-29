@@ -5,7 +5,13 @@ namespace BordlyWords.DefaultInfrastructure.Domain
 {
     public class LoadWordsParam : ILoadWordsParam
     {
+        public int MinWordLength { get; init; } = 1;
+
+        public int MaxWordLength { get; init; } = int.MaxValue;
+
         public CultureInfo Culture { get; init; } = new CultureInfo("nb-NO");
+
+        public required string Name { get; init; }
 
         private readonly IEnumerable<string> _words = Enumerable.Empty<string>();
         public required IEnumerable<string> Words 
@@ -21,6 +27,7 @@ namespace BordlyWords.DefaultInfrastructure.Domain
             init => _checkWords = value?.EnsureOnlyMayBeWords();
         }
 
+        public string? Description { get; set; }
     }
 
 }

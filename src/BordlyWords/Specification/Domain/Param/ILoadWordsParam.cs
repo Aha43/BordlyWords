@@ -4,8 +4,12 @@ namespace BordlyWords.Specification.Domain.Param
 {
     public interface ILoadWordsParam
     {
-        public CultureInfo Culture { get; init; }
-        public IEnumerable<string> Words { get; init; }
-        public IEnumerable<string>? CheckWords { get; init; }
+        public int MinWordLength { get; }
+        public int MaxWordLength { get; }
+        public CultureInfo Culture { get; }
+        public string Name { get; }
+        public string? Description { get; }
+        public IEnumerable<string> Words { get; }
+        public IEnumerable<string>? CheckWords { get; }
     }
 }

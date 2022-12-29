@@ -23,7 +23,7 @@ namespace UnitTest
         {
             var api = GetApi();
 
-            var par = new CheckWordParam { Word = word };
+            var par = new CheckWordParam { Name = "NSF2022", Word = word };
             var result = await api.IsWordAsync(par);
 
             Assert.Equal(isWord, result);
