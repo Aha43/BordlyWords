@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <None Update="Data\korpus.uib.no_humfak_nta_ord10000.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Data\nsf2022.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

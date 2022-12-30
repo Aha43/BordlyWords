@@ -1,7 +1,7 @@
 ﻿using BordlyWords.Specification.Domain.Param;
 using System.Globalization;
 
-namespace BordlyWords.DefaultInfrastructure.Domain
+namespace BordlyWords.DefaultInfrastructure.Domain.Param
 {
     public class LoadWordsParam : ILoadWordsParam
     {
@@ -14,16 +14,16 @@ namespace BordlyWords.DefaultInfrastructure.Domain
         public required string Name { get; init; }
 
         private readonly IEnumerable<string> _words = Enumerable.Empty<string>();
-        public required IEnumerable<string> Words 
+        public required IEnumerable<string> Words
         {
             get => _words;
             init => _words = value.EnsureOnlyMayBeWords();
         }
 
         private IEnumerable<string>? _checkWords = null;
-        public IEnumerable<string>? CheckWords 
-        { 
-            get => _checkWords; 
+        public IEnumerable<string>? CheckWords
+        {
+            get => _checkWords;
             init => _checkWords = value?.EnsureOnlyMayBeWords();
         }
 

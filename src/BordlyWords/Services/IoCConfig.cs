@@ -1,5 +1,5 @@
 ﻿using BordlyWords.DefaultInfrastructure.Api;
-using BordlyWords.DefaultInfrastructure.Domain;
+using BordlyWords.DefaultInfrastructure.Domain.Param;
 using BordlyWords.Specification.Api;
 using BordlyWords.Specification.Domain.Param;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,18 +9,32 @@ namespace BordlyWords.Services
 {
     public static class IoCConfig
     {
-        public static IServiceCollection AddBordlyWordUsingNsfDictionaryServices(this IServiceCollection services) 
+        public static IServiceCollection AddBordlyWordNorwegianServices(this IServiceCollection services) 
         {
+            char[] sep= { ' ' };
             return services.AddBordlyWordsServices(opt => 
             {
                 opt.AddSource(new WordDictionary
                 {
                     Name = "NSF2022",
                     WordSource = new WordSource
+                    {
+                        SourceLocation = "./Data/nsf2022.txt"
+                    }
+                });
+                opt.AddSource(new WordDictionary
+                {
+                    Name = "CommonAndNSF2022",
+                    WordSource = new WordSource
+                    { 
+                        SourceLocation = "./Data/korpus.uib.no_humfak_nta_ord10000.txt",
+                        ToWord = s => s.Split(sep, StringSplitOptions.RemoveEmptyEntries)[1].Trim(),
+                    },
+                    CheckWordSource = new WordSource
                     { 
                         SourceLocation = "./Data/nsf2022.txt"
-                    } 
-                }); 
+                    }
+                });
             });
         }
 

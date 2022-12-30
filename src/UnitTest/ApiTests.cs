@@ -1,4 +1,4 @@
-﻿using BordlyWords.DefaultInfrastructure.Domain;
+﻿using BordlyWords.DefaultInfrastructure.Domain.Param;
 using BordlyWords.Services;
 using BordlyWords.Specification.Api;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +10,7 @@ namespace UnitTest
         private IBordlyWordsApi GetApi()
         {
             var services = new ServiceCollection();
-            services.AddBordlyWordUsingNsfDictionaryServices();
+            services.AddBordlyWordNorwegianServices();
             var sb = services.BuildServiceProvider();
             return sb.GetRequiredService<IBordlyWordsApi>();
         }

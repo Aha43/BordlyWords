@@ -1,4 +1,5 @@
 ﻿using BordlyWords.Specification.Api;
+using BordlyWords.Specification.Domain;
 using BordlyWords.Specification.Domain.Param;
 using System.Globalization;
 
@@ -24,6 +25,13 @@ namespace BordlyWords.DefaultInfrastructure.Api
             var dict = new WordDictionary(p);
             _words[dict.Key] = new WordDictionary(p);
             return Task.CompletedTask;
+        }
+
+        public Task<IEnumerable<IWordDictionaryInfo>> GetInfo(CancellationToken cancellationToken = default)
+        {
+            var list = new List<IWordDictionaryInfo>();
+            foreach (var word in _words.Values) list.Add(word.GetDictionaryInfo());
+            return Task.FromResult(list.AsEnumerable());
         }
 
         // Helpers

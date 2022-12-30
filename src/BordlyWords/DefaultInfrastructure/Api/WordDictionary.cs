@@ -1,4 +1,6 @@
-﻿using BordlyWords.Specification.Domain.Param;
+﻿using BordlyWords.DefaultInfrastructure.Domain;
+using BordlyWords.Specification.Domain;
+using BordlyWords.Specification.Domain.Param;
 using System.Globalization;
 
 namespace BordlyWords.DefaultInfrastructure.Api
@@ -8,6 +10,8 @@ namespace BordlyWords.DefaultInfrastructure.Api
         public CultureInfo Culture { get; private set; } = new CultureInfo("nb-NO");
 
         public string Name { get; private set; }
+
+        public int WordCount { get; private set; }
 
         public string Key => $"{Name}_{Culture.Name}";
 
@@ -93,6 +97,23 @@ namespace BordlyWords.DefaultInfrastructure.Api
             }
 
             return null;
+        }
+
+        private IWordDictionaryInfo? _info = null;
+
+        public IWordDictionaryInfo GetDictionaryInfo() 
+        { 
+            if (_info == null) 
+            {
+                _info = new WordDictionaryInfo
+                {
+                    Culture = Culture.Name,
+                    Name = Name,
+                    WordCount = WordCount
+                };
+            }
+
+            return _info;
         }
 
     }
