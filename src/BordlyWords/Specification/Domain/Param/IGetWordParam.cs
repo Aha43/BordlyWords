@@ -6,7 +6,7 @@ namespace BordlyWords.Specification.Domain.Param
     public interface IGetWordParam
     {
         string Name { get; }
-        CultureInfo Culture { get; }
+        string Culture { get; }
         int? Length { get; }
     }
 }

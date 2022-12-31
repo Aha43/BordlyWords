@@ -5,7 +5,7 @@ namespace BordlyWords.DefaultInfrastructure.Domain.Param
 {
     public class GetWordParam : IGetWordParam
     {
-        public CultureInfo Culture { get; init; } = new CultureInfo("nb-NO");
+        public string Culture { get; init; } = "nb-NO";
 
         public required string Name { get; init; }
 

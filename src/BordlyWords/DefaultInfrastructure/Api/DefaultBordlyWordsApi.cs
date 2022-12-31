@@ -1,7 +1,7 @@
-﻿using BordlyWords.Specification.Api;
+﻿using BordlyWords.DefaultInfrastructure.Domain;
+using BordlyWords.Specification.Api;
 using BordlyWords.Specification.Domain;
 using BordlyWords.Specification.Domain.Param;
-using System.Globalization;
 
 namespace BordlyWords.DefaultInfrastructure.Api
 {
@@ -9,13 +9,19 @@ namespace BordlyWords.DefaultInfrastructure.Api
     {
         private readonly Dictionary<string, WordDictionary> _words = new();
 
-        public Task<bool> IsWordAsync(ICheckWordParam p, CancellationToken cancellationToken = default) => Task.FromResult(GetWordsOfCulture(p.Key()).IsWord(p.Word));
+        public Task<IWordCheck> IsWordAsync(ICheckWordParam p, CancellationToken cancellationToken = default)
+        {
+            var isWord = GetWordsOfCulture(p.Key()).IsWord(p.Word);
+            var retVal = new WordCheck { IsWord = isWord, Word = p.Word };
+            return Task.FromResult(retVal as IWordCheck);
+        }
 
-        public Task<string?> GetWordAsync(IGetWordParam p, CancellationToken cancellationToken = default)
+        public Task<IPickedWord> GetWordAsync(IGetWordParam p, CancellationToken cancellationToken = default)
         {
             var words = GetWordsOfCulture(p.Key());
-            var retVal = words.GetWord(p);
-            return Task.FromResult(retVal);
+            var word = words.GetWord(p);
+            var retVal = new PickedWord { Word = word };
+            return Task.FromResult(retVal as IPickedWord);
         }
 
         public Task LoadWordsAsync(ILoadWordsParam p, CancellationToken cancellationToken = default)

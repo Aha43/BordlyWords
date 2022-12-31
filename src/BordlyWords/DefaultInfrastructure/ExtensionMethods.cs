@@ -39,9 +39,9 @@ namespace BordlyWords.DefaultInfrastructure
             }
         }
 
-        public static string Key(this ICheckWordParam p) => $"{p.Name}_{p.Culture.Name}";
+        public static string Key(this ICheckWordParam p) => $"{p.Name}_{p.Culture}";
 
-        public static string Key(this IGetWordParam p) => $"{p.Name}_{p.Culture.Name}";
+        public static string Key(this IGetWordParam p) => $"{p.Name}_{p.Culture}";
 
     }
 
