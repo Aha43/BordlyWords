@@ -13,18 +13,18 @@ namespace BordlyWordsWebApi.Controllers
         public WordController(IBordlyWordsApi bordlyWordsApi) => _bordlyWordsApi = bordlyWordsApi;
 
         [HttpGet]
-        [Route("api/word")]
-        public async Task<IActionResult> GetWordAsync([FromQuery] GetWordParam p)
+        [Route("api/pick")]
+        public async Task<IActionResult> PickAsync([FromQuery] PickWordParam p)
         {
-            var word = await _bordlyWordsApi.GetWordAsync(p).ConfigureAwait(false);
+            var word = await _bordlyWordsApi.Pick(p).ConfigureAwait(false);
             return Ok(word);
         }
 
         [HttpGet]
         [Route("api/check")]
-        public async Task<IActionResult> CheckWordAsync([FromQuery] CheckWordParam p)
+        public async Task<IActionResult> CheckAsync([FromQuery] CheckWordParam p)
         {
-            var result = await _bordlyWordsApi.IsWordAsync(p).ConfigureAwait(false);
+            var result = await _bordlyWordsApi.Check(p).ConfigureAwait(false);
             return Ok(result);
         }
 

@@ -1,9 +1,8 @@
 ﻿using BordlyWords.Specification.Domain.Param;
-using System.Globalization;
 
 namespace BordlyWords.DefaultInfrastructure.Domain.Param
 {
-    public class GetWordParam : IGetWordParam
+    public class PickWordParam : IPickWordParam
     {
         public string Culture { get; init; } = "nb-NO";
 

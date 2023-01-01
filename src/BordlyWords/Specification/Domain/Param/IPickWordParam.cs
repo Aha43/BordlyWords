@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace BordlyWords.Specification.Domain.Param
 {
-    public interface IGetWordParam
+    public interface IPickWordParam
     {
         string Name { get; }
         string Culture { get; }

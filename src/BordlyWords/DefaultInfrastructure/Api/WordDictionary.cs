@@ -30,7 +30,8 @@ namespace BordlyWords.DefaultInfrastructure.Api
 
             var added = new HashSet<string>();
 
-            var lenghts = new HashSet<int>();
+            var lenghts = new SortedSet<int>();
+            var wordCount = 0;
 
             var tmp = new Dictionary<int, List<string>>();
             foreach (var word in p.Words)
@@ -47,6 +48,7 @@ namespace BordlyWords.DefaultInfrastructure.Api
 
                         added.Add(normalWord);
                         lenghts.Add(length);
+                        wordCount++;
                     }
                 }
             }
@@ -57,13 +59,15 @@ namespace BordlyWords.DefaultInfrastructure.Api
                 _words[pair.Key] = pair.Value.ToArray();
             }
 
+            WordCount = wordCount;
+
             _lengths = lenghts.ToArray();
 
             _checkWords = p.CheckWords?.Select(w => w.ToLower()).ToArray();
             if (_checkWords != null) Array.Sort(_checkWords);
         }
 
-        public bool IsWord(string word) 
+        public bool Check(string word) 
         {
             var normalWord = word.ToLower();
 
@@ -77,12 +81,12 @@ namespace BordlyWords.DefaultInfrastructure.Api
 
         private readonly Random _random = new();
 
-        public string? GetWord(IGetWordParam p)
+        public string? Pick(IPickWordParam p)
         {
             var length = p.Length; 
             if (length == null)
             {
-                if (_lengths.Length== 0) return null;
+                if (_lengths.Length == 0) return null;
                 var idx = _random.Next(_lengths.Length);
                 var words = _words[idx];
                 idx = _random.Next(words.Length);
@@ -105,11 +109,22 @@ namespace BordlyWords.DefaultInfrastructure.Api
         { 
             if (_info == null) 
             {
+                var buckets = new List<IWordBucketInfo>();
+
+                foreach (var idx in _lengths) 
+                {
+                    var words = _words[idx];
+                    buckets.Add(new WordBucketInfo { Length = idx, Count = words.Length });
+                }
+
                 _info = new WordDictionaryInfo
                 {
                     Culture = Culture.Name,
                     Name = Name,
-                    WordCount = WordCount
+                    Description = Description,
+                    WordCount = WordCount,
+                    WordCountForCheck = _checkWords == null ? WordCount : _checkWords.Length,
+                    BucketInfo = buckets
                 };
             }
 

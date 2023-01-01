@@ -16,6 +16,7 @@ namespace BordlyWords.Services
                 opt.AddSource(new WordDictionary
                 {
                     Name = "NSF2022",
+                    Description = "Pick and check words using 'Norwegian Scrabble Forbund' word list",
                     WordSource = new WordSource
                     {
                         SourceLocation = "./Data/nsf2022.txt"
@@ -24,6 +25,7 @@ namespace BordlyWords.Services
                 opt.AddSource(new WordDictionary
                 {
                     Name = "CommonAndNSF2022",
+                    Description = "Pick from a list of common Norwegian words but check using 'Norwegian Scrabble Forbund' word list",
                     WordSource = new WordSource
                     { 
                         SourceLocation = "./Data/korpus.uib.no_humfak_nta_ord10000.nfs2022Accepted.txt"
@@ -66,6 +68,7 @@ namespace BordlyWords.Services
             {
                 Culture = dictionary.Culture,
                 Name = dictionary.Name,
+                Description = dictionary.Description,
                 Words = words,
                 CheckWords = checkWords
             };
