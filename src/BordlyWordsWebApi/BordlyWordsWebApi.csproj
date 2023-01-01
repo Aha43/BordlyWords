@@ -18,6 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Data\korpus.uib.no_humfak_nta_ord10000.nfs2022Accepted.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Data\korpus.uib.no_humfak_nta_ord10000.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

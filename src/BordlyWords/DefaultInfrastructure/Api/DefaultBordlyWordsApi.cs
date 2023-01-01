@@ -29,7 +29,7 @@ namespace BordlyWords.DefaultInfrastructure.Api
             p.EnsureLoadWordsParamParam();
 
             var dict = new WordDictionary(p);
-            _words[dict.Key] = new WordDictionary(p);
+            _words[dict.Key] = dict;
             return Task.CompletedTask;
         }
 

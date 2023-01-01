@@ -2,8 +2,8 @@
 using BordlyWords.DefaultInfrastructure.Domain.Param;
 using BordlyWords.Specification.Api;
 using BordlyWords.Specification.Domain.Param;
+using BordlyWords.Utilities;
 using Microsoft.Extensions.DependencyInjection;
-using System.Globalization;
 
 namespace BordlyWords.Services
 {
@@ -11,7 +11,6 @@ namespace BordlyWords.Services
     {
         public static IServiceCollection AddBordlyWordNorwegianServices(this IServiceCollection services) 
         {
-            char[] sep= { ' ' };
             return services.AddBordlyWordsServices(opt => 
             {
                 opt.AddSource(new WordDictionary
@@ -27,8 +26,7 @@ namespace BordlyWords.Services
                     Name = "CommonAndNSF2022",
                     WordSource = new WordSource
                     { 
-                        SourceLocation = "./Data/korpus.uib.no_humfak_nta_ord10000.txt",
-                        ToWord = s => s.Split(sep, StringSplitOptions.RemoveEmptyEntries)[1].Trim(),
+                        SourceLocation = "./Data/korpus.uib.no_humfak_nta_ord10000.nfs2022Accepted.txt"
                     },
                     CheckWordSource = new WordSource
                     { 
@@ -73,32 +71,15 @@ namespace BordlyWords.Services
             };
         }
 
-        public static async Task<IEnumerable<string>> ReadWordsAsync(this WordSource source, CancellationToken cancellationToken = default)
+        private static async Task<IEnumerable<string>> ReadWordsAsync(this WordSource source, CancellationToken cancellationToken = default)
         {
-            var text = string.Empty;
             if (source.IsFile)
             {
-                text = File.ReadAllText(source.SourceLocation);
-            }
-            else
-            {
-                var uri = new Uri(source.SourceLocation);
-                using var httpClient = new HttpClient();
-                var response = await httpClient.GetAsync(uri, cancellationToken).ConfigureAwait(false);
-                text = await response.EnsureSuccessStatusCode().Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                return await ReadWriteUtilities.ReadWordsAsync(source.SourceLocation, source.ToWord, cancellationToken).ConfigureAwait(false);
             }
 
-            var list = new List<string>();
-            var reader = new StringReader(text);
-            while (true)
-            {
-                var line = reader.ReadLine();
-                if (line == null) break;
-                var word = source.ToWord(line);
-                list.Add(word);
-            }
-
-            return list;
+            var uri = new Uri(source.SourceLocation);
+            return await ReadWriteUtilities.ReadWordsAsync(uri, source.ToWord, cancellationToken).ConfigureAwait(false);
         }
 
     }
@@ -115,7 +96,7 @@ namespace BordlyWords.Services
 
     public class WordDictionary
     {
-        public CultureInfo Culture { get; init; } = new CultureInfo("nb-NO");
+        public string Culture { get; init; } = "nb-NO";
         public required string Name { get; init; }
         public string? Description { get; init; }
         public required WordSource WordSource { get; init; }

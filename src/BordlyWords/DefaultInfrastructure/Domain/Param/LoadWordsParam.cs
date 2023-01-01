@@ -1,5 +1,4 @@
 ﻿using BordlyWords.Specification.Domain.Param;
-using System.Globalization;
 
 namespace BordlyWords.DefaultInfrastructure.Domain.Param
 {
@@ -9,7 +8,7 @@ namespace BordlyWords.DefaultInfrastructure.Domain.Param
 
         public int MaxWordLength { get; init; } = int.MaxValue;
 
-        public CultureInfo Culture { get; init; } = new CultureInfo("nb-NO");
+        public string Culture { get; init; } = "nb-NO";
 
         public required string Name { get; init; }
 
